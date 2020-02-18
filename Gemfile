@@ -5,6 +5,8 @@ ruby '2.6.4'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.0'
+# Use CoffeeScript for .coffee assets and views
+gem 'coffee-rails', '~> 4.2'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.4'
 # Use Puma as the app server
@@ -15,6 +17,9 @@ gem 'sass-rails', '~> 5'
 gem 'webpacker', '~> 4.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
+# Jquery rails
+gem 'jquery-rails', '~> 4.3', '>= 4.3.3'
+gem 'rails-ujs', '~> 0.1.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.7'
 # Use Redis adapter to run Action Cable in production
@@ -54,9 +59,26 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'mousetrap-rails'
 gem 'lodash-rails'
-gem 'axlsx_rails'
+gem 'caxlsx_rails'
 gem 'bullet', group: 'development'
 gem 'devise'
 # use Postgresql
 gem 'pg', '~> 0.20'
 gem 'paper_trail'
+gem 'font-awesome-sass', '~> 4.7.0'
+gem 'bootstrap', git: 'https://github.com/twbs/bootstrap-rubygem'
+gem 'kaminari'
+gem 'simple_form'
+gem 'friendly_id'
+gem 'paper_trail'
+gem 'paper_trail-association_tracking'
+#Crawler Cronjob Queue
+gem 'sidekiq', '~> 5.1'
+gem "sidekiq-cron", "~> 1.1"
+gem 'sinatra', :require => nil #Use to monitor sidekiq
+gem 'bullet', group: 'development'
+gem 'redis'
+gem 'redis-rails'
+gem 'redis-namespace'
+gem 'babosa'
+gem 'pundit'

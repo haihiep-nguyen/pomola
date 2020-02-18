@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/twbs/bootstrap-rubygem
+  revision: ef343b781ca1316ba3953295222578a65bd576c0
+  specs:
+    bootstrap (4.4.1)
+      autoprefixer-rails (>= 9.1.0)
+      popper_js (>= 1.14.3, < 2)
+      sassc-rails (>= 2.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -58,9 +67,9 @@ GEM
       zeitwerk (~> 2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    axlsx_rails (0.6.1)
-      actionpack (>= 3.1)
-      caxlsx (>= 3.0)
+    autoprefixer-rails (9.7.4)
+      execjs
+    babosa (1.0.3)
     bcrypt (3.1.13)
     bindex (0.8.1)
     bootsnap (1.4.5)
@@ -83,8 +92,19 @@ GEM
       mimemagic (~> 0.3)
       nokogiri (~> 1.10, >= 1.10.4)
       rubyzip (>= 1.3.0, < 3)
+    caxlsx_rails (0.6.2)
+      actionpack (>= 3.1)
+      caxlsx (>= 3.0)
     childprocess (3.0.0)
+    coffee-rails (4.2.2)
+      coffee-script (>= 2.2.0)
+      railties (>= 4.0.0)
+    coffee-script (2.4.1)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.12.2)
     concurrent-ruby (1.1.6)
+    connection_pool (2.2.2)
     crass (1.0.6)
     devise (4.7.1)
       bcrypt (~> 3.0)
@@ -93,7 +113,17 @@ GEM
       responders
       warden (~> 1.2.3)
     erubi (1.9.0)
+    et-orbi (1.2.2)
+      tzinfo
+    execjs (2.7.0)
     ffi (1.12.2)
+    font-awesome-sass (4.7.0)
+      sass (>= 3.2)
+    friendly_id (5.3.0)
+      activerecord (>= 4.0.0)
+    fugit (1.3.3)
+      et-orbi (~> 1.1, >= 1.1.8)
+      raabro (~> 1.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     htmlentities (4.3.4)
@@ -101,6 +131,22 @@ GEM
       concurrent-ruby (~> 1.0)
     jbuilder (2.10.0)
       activesupport (>= 5.0.0)
+    jquery-rails (4.3.5)
+      rails-dom-testing (>= 1, < 3)
+      railties (>= 4.2.0)
+      thor (>= 0.14, < 2.0)
+    kaminari (1.2.0)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.2.0)
+      kaminari-activerecord (= 1.2.0)
+      kaminari-core (= 1.2.0)
+    kaminari-actionview (1.2.0)
+      actionview
+      kaminari-core (= 1.2.0)
+    kaminari-activerecord (1.2.0)
+      activerecord
+      kaminari-core (= 1.2.0)
+    kaminari-core (1.2.0)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -121,6 +167,8 @@ GEM
     minitest (5.14.0)
     mousetrap-rails (1.4.6)
     msgpack (1.3.3)
+    mustermann (1.1.1)
+      ruby2_keywords (~> 0.0.1)
     nio4r (2.5.2)
     nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
@@ -128,10 +176,17 @@ GEM
     paper_trail (10.3.1)
       activerecord (>= 4.2)
       request_store (~> 1.1)
+    paper_trail-association_tracking (2.0.0)
     pg (0.21.0)
+    popper_js (1.16.0)
     public_suffix (4.0.3)
     puma (3.12.2)
+    pundit (2.1.0)
+      activesupport (>= 3.0.0)
+    raabro (1.1.6)
     rack (2.2.2)
+    rack-protection (2.0.8.1)
+      rack
     rack-proxy (0.6.5)
       rack
     rack-test (1.1.0)
@@ -156,6 +211,8 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.3.0)
       loofah (~> 2.3)
+    rails-ujs (0.1.0)
+      railties (>= 3.1)
     railties (6.0.2.1)
       actionpack (= 6.0.2.1)
       activesupport (= 6.0.2.1)
@@ -166,12 +223,32 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    redis (4.1.3)
+    redis-actionpack (5.2.0)
+      actionpack (>= 5, < 7)
+      redis-rack (>= 2.1.0, < 3)
+      redis-store (>= 1.1.0, < 2)
+    redis-activesupport (5.2.0)
+      activesupport (>= 3, < 7)
+      redis-store (>= 1.3, < 2)
+    redis-namespace (1.7.0)
+      redis (>= 3.0.4)
+    redis-rack (2.1.2)
+      rack (>= 2.0.8, < 3)
+      redis-store (>= 1.2, < 2)
+    redis-rails (5.0.2)
+      redis-actionpack (>= 5.0, < 6)
+      redis-activesupport (>= 5.0, < 6)
+      redis-store (>= 1.2, < 2)
+    redis-store (1.8.1)
+      redis (>= 4, < 5)
     regexp_parser (1.6.0)
     request_store (1.5.0)
       rack (>= 1.4)
     responders (3.0.0)
       actionpack (>= 5.0)
       railties (>= 5.0)
+    ruby2_keywords (0.0.2)
     ruby_dep (1.5.0)
     rubyzip (2.2.0)
     sass (3.7.4)
@@ -185,9 +262,33 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
+    sassc (2.2.1)
+      ffi (~> 1.9)
+    sassc-rails (2.1.2)
+      railties (>= 4.0.0)
+      sassc (>= 2.0)
+      sprockets (> 3.0)
+      sprockets-rails
+      tilt
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
+    sidekiq (5.2.7)
+      connection_pool (~> 2.2, >= 2.2.2)
+      rack (>= 1.5.0)
+      rack-protection (>= 1.5.0)
+      redis (>= 3.3.5, < 5)
+    sidekiq-cron (1.1.0)
+      fugit (~> 1.1)
+      sidekiq (>= 4.2.1)
+    simple_form (5.0.2)
+      actionpack (>= 5.0)
+      activemodel (>= 5.0)
+    sinatra (2.0.8.1)
+      mustermann (~> 1.0)
+      rack (~> 2.0)
+      rack-protection (= 2.0.8.1)
+      tilt (~> 2.0)
     spring (2.1.0)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -235,22 +336,39 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  axlsx_rails
+  babosa
   bootsnap (>= 1.4.2)
+  bootstrap!
   bullet
   byebug
   capybara (>= 2.15)
+  caxlsx_rails
+  coffee-rails (~> 4.2)
   devise
+  font-awesome-sass (~> 4.7.0)
+  friendly_id
   jbuilder (~> 2.7)
+  jquery-rails (~> 4.3, >= 4.3.3)
+  kaminari
   listen (>= 3.0.5, < 3.2)
   lodash-rails
   mousetrap-rails
   paper_trail
+  paper_trail-association_tracking
   pg (~> 0.20)
   puma (~> 3.11)
+  pundit
   rails (~> 6.0.0)
+  rails-ujs (~> 0.1.0)
+  redis
+  redis-namespace
+  redis-rails
   sass-rails (~> 5)
   selenium-webdriver
+  sidekiq (~> 5.1)
+  sidekiq-cron (~> 1.1)
+  simple_form
+  sinatra
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3 (~> 1.4)

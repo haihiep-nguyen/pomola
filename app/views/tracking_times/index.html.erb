@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Tracking Times</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Task</th>
+      <th>Start at</th>
+      <th>End at</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @tracking_times.each do |tracking_time| %>
+      <tr>
+        <td><%= tracking_time.task_id %></td>
+        <td><%= tracking_time.start_at %></td>
+        <td><%= tracking_time.end_at %></td>
+        <td><%= link_to 'Show', tracking_time %></td>
+        <td><%= link_to 'Edit', edit_tracking_time_path(tracking_time) %></td>
+        <td><%= link_to 'Destroy', tracking_time, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Tracking Time', new_tracking_time_path %>

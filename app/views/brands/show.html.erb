@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @brand.name %>
+</p>
+
+<p>
+  <strong>Prefix name:</strong>
+  <%= @brand.prefix_name %>
+</p>
+
+<p>
+  <strong>Slug:</strong>
+  <%= @brand.slug %>
+</p>
+
+<p>
+  <strong>Is active:</strong>
+  <%= @brand.is_active %>
+</p>
+
+<p>
+  <strong>Is deleted:</strong>
+  <%= @brand.is_deleted %>
+</p>
+
+<%= link_to 'Edit', edit_brand_path(@brand) %> |
+<%= link_to 'Back', brands_path %>

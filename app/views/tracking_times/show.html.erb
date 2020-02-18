@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Task:</strong>
+  <%= @tracking_time.task_id %>
+</p>
+
+<p>
+  <strong>Start at:</strong>
+  <%= @tracking_time.start_at %>
+</p>
+
+<p>
+  <strong>End at:</strong>
+  <%= @tracking_time.end_at %>
+</p>
+
+<%= link_to 'Edit', edit_tracking_time_path(@tracking_time) %> |
+<%= link_to 'Back', tracking_times_path %>

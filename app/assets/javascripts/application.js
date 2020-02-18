@@ -5,6 +5,8 @@
 // the compiled file.
 //
 //= require jquery
+//= require popper
+//= require bootstrap
 //= require jquery_ujs
 //= require mousetrap
 //= require_tree .

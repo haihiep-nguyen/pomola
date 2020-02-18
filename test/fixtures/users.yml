@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  username: MyString
+  name: MyString
+  encrypted_password: MyString
+  reset_password_token: MyString
+  photo: MyString
+  brand: 
+  slug: MyString
+  dob: 2020-02-18
+  address: MyString
+  is_deteled: false
+  is_active: false
+
+two:
+  username: MyString
+  name: MyString
+  encrypted_password: MyString
+  reset_password_token: MyString
+  photo: MyString
+  brand: 
+  slug: MyString
+  dob: 2020-02-18
+  address: MyString
+  is_deteled: false
+  is_active: false

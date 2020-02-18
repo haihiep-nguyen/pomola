@@ -1,0 +1,32 @@
+<%= form_with(model: tracking_time, local: true) do |form| %>
+  <% if tracking_time.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(tracking_time.errors.count, "error") %> prohibited this tracking_time from being saved:</h2>
+
+      <ul>
+        <% tracking_time.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :task_id %>
+    <%= form.text_field :task_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_at %>
+    <%= form.text_field :start_at %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_at %>
+    <%= form.text_field :end_at %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

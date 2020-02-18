@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyString
+  start_at: 
+  end_at: 
+  user: one
+  category: one
+
+two:
+  name: MyString
+  description: MyString
+  start_at: 
+  end_at: 
+  user: two
+  category: two
