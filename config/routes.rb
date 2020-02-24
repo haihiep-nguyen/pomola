@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   resources :tracking_times
-  resources :tasks
+  resources :tasks do
+    collection do
+      post :command
+    end
+  end
   resources :categories
   resources :brands
   resources :users

@@ -1,7 +1,26 @@
-<div class="p-5">
-  <h1 class="text-center text-success">POMOLA</h1>
-  <p class="text-center">Welcome to POMOLA</p>
-  <p class="text-center">
-    <i class="text-danger">Created by: Hai H. Nguyen</i>
-  </p>
+<div class="w-screen h-screen d-flex flex-column">
+  <div class="container-fluid header bg-light">
+    <h3 class="text-success">PomoLa</h3>
+  </div>
+  <div class="container-fluid flex-grow-1 flex-shrink-1">
+    <div class="row">
+      <div class="col-12 col-sm-6" id="list-tasks">
+        <% @tasks.each do |task| %>
+        <p id="<%= task.serial %>"><%= "#{task.serial}: #{task.description}" %></p>
+        <% end %>
+      </div>
+      <div class="col-12 col-sm-6">
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid bg-light">
+    <div class="row">
+      <div class="col-12">
+        <%= simple_form_for :task, url: command_tasks_path, method: 'POST', html: {id: "command-form"}, remote: true do |f| %>
+          <%= f.input_field :command %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
 </div>

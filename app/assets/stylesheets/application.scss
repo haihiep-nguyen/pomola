@@ -17,3 +17,21 @@
  *= require_tree .
  *= require_self
  */
+.height-95 {
+  height: 95vh;
+  max-height: calc(100vh - 100px);
+  overflow: scroll;
+}
+.height-9 {
+  height: 5vh;
+  min-height: 100px;
+}
+.w-screen {
+  width: 100vw;
+}
+.h-screen {
+  height: 100vh;
+}
+body {
+  font-family: 'Montserrat';
+}

@@ -61,6 +61,62 @@ class TasksController < ApplicationController
     end
   end
 
+  def command
+    command = task_params[:command]
+    result = parse_command(command)
+    @error = false
+    @message
+    if result
+      if result[:action] == 'create_task'
+        @task_category = result[:category]
+        @task_category = '@uncategorized' unless @task_category.present?
+        @task_description = result[:task_description]
+        @task_serial = 1
+        @last_serial = Task.last.try(:serial)
+        @task_serial = @last_serial + 1 if @last_serial.present?
+        ActiveRecord::Base.transaction do
+          @category = Category.find_by(name: @task_category)
+          @user = User.last
+          unless @category.present?
+            @category = Category.new(name: @task_category, user: @user)
+            if @category.save
+
+            else
+              @error = true
+              @message = @category.errors.full_messages.to_sentence
+              raise ActiveRecord::Rollback
+            end
+          end
+          @new_task = Task.new(serial: @task_serial,
+                              description: @task_description,
+                              category: @category,
+                              user_id: 1,
+                              status: :waiting)
+          if @new_task.save
+
+          else
+            @error = true
+            @message = @new_task.errors.full_messages.to_sentence
+            raise ActiveRecord::Rollback
+          end
+        end
+      end
+    else
+      @error = true
+    end
+    if @error
+      respond_to do |format|
+        format.js {render 'shared/error', locals: {error: @error, message: @message}}
+      end
+    else
+      if result[:action] == 'create_task'
+        respond_to do |format|
+          format.js {render 'tasks/new', locals: {task: @new_task, category: @new_task.category}}
+        end
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_task
@@ -69,6 +125,6 @@ class TasksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def task_params
-      params.require(:task).permit(:name, :description, :start_at, :end_at, :user_id, :category_id)
+      params.require(:task).permit(:name, :description, :start_at, :end_at, :user_id, :category_id, :command)
     end
 end
