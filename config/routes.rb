@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  root to: 'home#index'
+  as :user do
+    get "signin" => "devise/sessions#new"
+    post "signin" => "devise/sessions#create"
+    delete "signout" => "devise/sessions#destroy"
+  end
+  devise_for :users
   resources :tracking_times
   resources :tasks do
     collection do
@@ -8,6 +15,4 @@ Rails.application.routes.draw do
   resources :categories
   resources :brands
   resources :users
-  root to: 'home#index'
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

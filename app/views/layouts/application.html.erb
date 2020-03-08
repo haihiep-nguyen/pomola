@@ -13,6 +13,13 @@
   </head>
 
   <body>
+    <div class="container-fluid">
+      <div class="notice"><%= notice %></div>
+      <div class="alert p-0 m-0"><%= alert %></div>
+    </div>
+    <% unless current_page?(:controller => 'home', :action => 'index') %>
+      <%= render partial: 'devise/menu/login_items' %>
+    <% end %>
     <%= yield %>
   </body>
 </html>

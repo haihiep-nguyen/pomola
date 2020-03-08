@@ -100,6 +100,129 @@ class TasksController < ApplicationController
             raise ActiveRecord::Rollback
           end
         end
+      elsif result[:action] == 'begin_task'
+        task_serial = result[:task]
+        @task = Task.find_by(serial: task_serial)
+        @task_tracking_times = @task.tracking_times.pluck(:id)
+        current_starting = @task.tracking_times.find_by(status: :starting)
+        if current_starting.nil?
+          ActiveRecord::Base.transaction do
+            if @task_tracking_times.size == 0
+              @task.start_at = Time.zone.now
+            end
+            @task.status = :in_progress
+            if @task.save
+              @start_at = Time.zone.now
+              task_new_tracking = @task.tracking_times.new(start_at: Time.zone.now)
+              if task_new_tracking.save
+                @start_at = Time.zone.now
+                @message = 'continue'
+              else
+                @error = true
+                @message = task_new_tracking.errors.full_messages.to_sentence.inspect
+              end
+            else
+              @error = true
+              @message = @task.errors.full_messages.to_sentence
+              raise ActiveRecord::Rollback
+            end
+          end
+        else
+          @error = true
+          @message = 'started before'
+        end
+      elsif result[:action] == 'stop_task'
+        task_serial = result[:task]
+        @task = Task.find_by(serial: task_serial)
+        current_starting = @task.tracking_times.find_by(status: :starting)
+        ActiveRecord::Base.transaction do
+          if current_starting.present?
+            if current_starting.update(status: :finished, end_at: Time.zone.now)
+              @end_at = current_starting.end_at
+              @message = "stop tracking on #{task_serial}"
+            else
+              @error = true
+              @message = current_starting.errors.full_messages.to_sentence
+              raise ActiveRecord::Rollback
+            end
+          else
+            @error = true
+            @message = 'cannot find any tracking time'
+            raise ActiveRecord::Rollback
+          end
+        end
+      elsif result[:action] == 'check_task'
+        task_serial = result[:task]
+        @task = Task.find_by(serial: task_serial)
+        if @task.status == 'done'
+          @error = true
+          @message = 'task done before'
+        else
+          current_starting = @task.tracking_times.find_by(status: :starting)
+          ActiveRecord::Base.transaction do
+            if current_starting.present?
+              if current_starting.update(status: :finished, end_at: Time.zone.now)
+                @end_at = current_starting.end_at
+                if @task.update(end_at: Time.zone.now, status: :done)
+                  @end_at = @task.end_at
+                  @message = "task #{task_serial} checked"
+                else
+                  @error = true
+                  @message = @task.errors.full_message.to_sentence.inspect
+                  raise ActiveRecord::Rollback
+                end
+              else
+                @error = true
+                @message = current_starting.errors.full_messages.to_sentence
+                raise ActiveRecord::Rollback
+              end
+            else
+              if @task.update(end_at: Time.zone.now, status: :done)
+                @end_at = @task.end_at
+                @message = "task #{task_serial} checked"
+              else
+                @error = true
+                @message = @task.errors.full_message.to_sentence.inspect
+                raise ActiveRecord::Rollback
+              end
+            end
+          end
+        end
+      elsif result[:action] == 'edit_task'
+        task_serial = result[:task]
+        @task = Task.find_by(serial: task_serial)
+        ActiveRecord::Base.transaction do
+          if @task.present?
+            if @task.update(description: result[:task_description])
+              @message = 'changed description'
+            else
+              @error = true
+              @message = @task.errors.full_messages.to_sentence.inspect
+              raise ActiveRecord::Rollback
+            end
+          else
+            @error = true
+            @message = 'cannot find task'
+            raise ActiveRecord::Rollback
+          end
+        end
+      elsif result[:action] == 'delete_task'
+        task_serial = result[:task]
+        @task = Task.find_by(serial: task_serial)
+        ActiveRecord::Base.transaction do
+          if @task.present?
+            if @task.destroy
+            else
+              @error = true
+              @message = @task.errors.full_messages.to_sentence
+              raise ActiveRecord::Rollback
+            end
+          else
+            @error = true
+            @message = 'cannot find task'
+            raise ActiveRecord::Rollback
+          end
+        end
       end
     else
       @error = true
@@ -112,6 +235,18 @@ class TasksController < ApplicationController
       if result[:action] == 'create_task'
         respond_to do |format|
           format.js {render 'tasks/new', locals: {task: @new_task, category: @new_task.category}}
+        end
+      elsif result[:action] == 'begin_task'
+        respond_to do |format|
+          format.js {render 'tasks/update', locals: {task: @task, start_at: @start_at, message: @message}}
+        end
+      elsif result[:action] == 'stop_task'
+        respond_to do |format|
+          format.js {render 'tasks/update', locals: {task: @task, end_at: @end_at, message: @message}}
+        end
+      elsif result[:action] == 'check_task'
+        respond_to do |format|
+          format.js {render 'tasks/update', locals: {task: @task, end_at: @end_at, message: @message}}
         end
       end
     end

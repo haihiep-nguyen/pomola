@@ -4,6 +4,7 @@ class CreateTrackingTimes < ActiveRecord::Migration[6.0]
       t.belongs_to :task, null: false, foreign_key: true
       t.datetime :start_at
       t.datetime :end_at
+      t.integer :status, default: 0
 
       t.timestamps
     end

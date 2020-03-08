@@ -22,15 +22,17 @@ class ApplicationController < ActionController::Base
                 task_description: command_as_array[1..-1].join(' ')}
       end
     elsif command_action == 'b' || command_action == 'begin'
-      return {action: 'begin_task', tasks: command_as_array.drop(1)}
+      return {action: 'begin_task', task: command_as_array.drop(1)}
     elsif command_action == 'st' || command_action == 'stop'
-      return {action: 'stop_task', tasks: command_as_array.drop(1)}
+      return {action: 'stop_task', task: command_as_array.drop(1)}
+    elsif command_action == 'c' || command_action == 'check'
+      return {action: 'check_task', task: command_as_array.drop(1)}
     elsif command_action == 'e' || command_action == 'edit'
       return {action: 'edit_task',
               task: command_as_array[1],
               task_description: command_as_array[2..-1].join(' ')}
     elsif command_action == 'd' || command_action == 'delete'
-      return {action: 'delete_task', tasks: command_as_array.drop(1)}
+      return {action: 'delete_task', task: command_as_array.drop(1)}
     elsif command_action == 'today'
       return {action: 'today_task'}
     else

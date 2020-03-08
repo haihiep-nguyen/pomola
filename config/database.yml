@@ -11,7 +11,7 @@ default: &default
 
 development:
   <<: *default
-  database: pomola
+  database: pomola3
   username: haihiepnguyen
   password: 2291
 

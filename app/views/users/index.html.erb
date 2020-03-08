@@ -21,18 +21,19 @@
   </thead>
 
   <tbody>
+  <% raise current_user.sign_out.inspect %>
     <% @users.each do |user| %>
       <tr>
-        <td><%= user.username %></td>
+<!--        <td><%#= user.username %></td>-->
         <td><%= user.name %></td>
         <td><%= user.encrypted_password %></td>
         <td><%= user.reset_password_token %></td>
         <td><%= user.photo %></td>
-        <td><%= user.brand %></td>
+<!--        <td><%#= user.brand %></td>-->
         <td><%= user.slug %></td>
         <td><%= user.dob %></td>
         <td><%= user.address %></td>
-        <td><%= user.is_deteled %></td>
+        <td><%= user.is_deleted %></td>
         <td><%= user.is_active %></td>
         <td><%= link_to 'Show', user %></td>
         <td><%= link_to 'Edit', edit_user_path(user) %></td>
