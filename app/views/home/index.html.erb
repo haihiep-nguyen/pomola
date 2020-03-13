@@ -12,11 +12,15 @@
   <div class="container-fluid flex-grow-1 flex-shrink-1">
     <div class="row">
       <div class="col-12 col-sm-6" id="list-tasks">
-        <% @tasks.each do |task| %>
-        <p id="<%= task.serial %>"><%= "#{task.serial}: #{task.description}" %></p>
+        <% @tasks.each do |category, tasks| %>
+          <%= render partial: 'categories/category_box', locals: {category: category, tasks: tasks} %>
         <% end %>
       </div>
-      <div class="col-12 col-sm-6">
+      <div class="col-12 col-sm-6" id="archived-tasks">
+        <h4>Archived Tasks</h4>
+        <% @archived_tasks.each do |task| %>
+          <%= render partial: 'tasks/inline', locals: {record: task} %>
+        <% end %>
       </div>
     </div>
   </div>
@@ -24,7 +28,7 @@
     <div class="row">
       <div class="col-12">
         <%= simple_form_for :task, url: command_tasks_path, method: 'POST', html: {id: "command-form"}, remote: true do |f| %>
-          <%= f.input_field :command %>
+          <%= f.input_field :command, id: "command-input" %>
         <% end %>
       </div>
     </div>

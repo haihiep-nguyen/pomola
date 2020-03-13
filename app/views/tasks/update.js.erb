@@ -1,4 +1,75 @@
-console.log('update task')
-console.log('<%= start_at if defined?(start_at) %>');
-console.log('<%= end_at if defined?(end_at) %>');
-console.log('<%= message %>')
+let thisAction = '<%= task_action %>';
+let intervalTask = 'window.taskInterval.t' + <%= task.serial %>;
+let thisTask = $('#task-<%= task.serial %>');
+if(thisAction === 'delete_task'){
+    $('#task-<%= task.serial %>').remove();
+    clearInterval(eval(intervalTask));
+    console.log("delete task");
+}else{
+    if(thisAction === 'begin_task'){
+        runStartingTask(thisTask.find('.task-time-counter'));
+        console.log('begin task');
+    }else if(thisAction === 'stop_task' || thisAction === 'check_task'){
+        clearInterval(eval(intervalTask));
+        console.log('stop task');
+    }else if(thisAction === 'edit_task'){
+        console.log("CHANGE this task");
+        thisTask.find(".task-content").html('<%= task.description %>')
+    }else if(thisAction === 'archive_task'){
+        let archivedTasks = $("#archived-tasks .task");
+        if(archivedTasks.length === 0){
+            thisTask.appendTo("#archived-tasks");
+        }else{
+            let loopBreak = false;
+            archivedTasks.each(function () {
+                if(parseInt($(this).attr('data-task-serial')) > parseInt(thisTask.attr('data-task-serial'))){
+                    thisTask.insertBefore($(this));
+                    loopBreak = true
+                    return false;
+                }
+            });
+            if(loopBreak === false){
+                thisTask.appendTo("#archived-tasks");
+            }
+        }
+    }else if(thisAction === 'restore_task'){
+        console.log('resotre');
+        console.log(thisTask);
+        if($("#category-<%= task.category_id %>").length === 0){
+            let loopBreak = false;
+            let cateElem = "<%= escape_javascript(render partial: 'categories/category_box', locals: {category: task.category ,tasks: [task]}) %>";
+            thisTask.remove();
+            $("#list-tasks .category-box").each(function () {
+                if(parseInt($(this).attr('data-category-id')) > <%= task.category_id %>){
+                    $(cateElem).insertBefore($(this));
+                    loopBreak = true;
+                    return false;
+                }
+            });
+            if(loopBreak === false){
+                $(cateElem).appendTo("#list-tasks");
+            }
+        }else{
+            let categoryTasks = $("#category-<%= task.category_id %> .task");
+            if(categoryTasks.length === 0){
+                thisTask.appendTo("#category-<%= task.category_id %> .category-tasks");
+            }else{
+                let loopBreak = false;
+                categoryTasks.each(function () {
+                    if(parseInt($(this).attr('data-task-serial')) > parseInt(thisTask.attr('data-task-serial'))){
+                        thisTask.insertBefore($(this));
+                        loopBreak = true
+                        return false;
+                    }
+                });
+                if(loopBreak === false){
+                    thisTask.appendTo("#category-<%= task.category_id %> .category-tasks");
+                }
+            }
+            console.log(categoryTasks);
+        }
+    }
+    if(thisAction === 'begin_task' || thisAction === 'stop_task' || thisAction === 'check_task'){
+        $('#task-<%= task.serial %>').attr('data-action', thisAction);
+    }
+}

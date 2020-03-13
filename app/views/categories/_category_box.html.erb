@@ -1,0 +1,8 @@
+<div class="category-box" id="category-<%= category.id %>" data-category-id="<%= category.id %>">
+  <%= render partial: 'categories/inline', locals: {category: category} %>
+  <div class="category-tasks">
+    <% tasks.each do |task| %>
+      <%= render partial: 'tasks/inline', locals: {record: task} %>
+    <% end %>
+  </div>
+</div>

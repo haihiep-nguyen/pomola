@@ -1,0 +1,30 @@
+<%
+  data_action = ''
+  if record.status == 'done'
+    data_action = 'check_task'
+  elsif record.status == 'in_progress'
+    track_times = record.tracking_times.pluck(:id)
+    track_starting = record.tracking_times.where(status: :starting).pluck(:id)
+    data_action = 'begin_task' if track_starting.present?
+    data_action = 'stop_task' if track_times.present? && track_starting.blank?
+  end
+%>
+<div class="row each-task task"
+     id="task-<%= record.serial %>"
+     data-action="<%= data_action %>"
+     data-task-serial="<%= record.serial %>">
+  <div class="task-serial col-1">
+    <%= record.serial %>
+  </div>
+  <div class="task-content col-8">
+    <%= record.description %>
+  </div>
+  <% hms = get_hms(record.time_counting[:total_time]) %>
+  <div class="task-time-counter col-3 <%= 'running' if record.time_counting[:has_running] %>"
+       data-task-serial="<%= record.serial %>"
+       data-hours="<%= hms[:hours] %>"
+       data-minutes="<%= hms[:minutes] %>"
+       data-seconds="<%= hms[:seconds] %>">
+    <span class="hours"><%= hms[:hours] %></span>:<span class="minutes"><%= hms[:minutes] %></span>:<span class="seconds"><%= hms[:seconds] %></span>
+  </div>
+</div>

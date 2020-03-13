@@ -1,1 +1,5 @@
-document.getElementById('list-tasks').insertAdjacentHTML('beforeend', '<p id="<%= task.serial %>"><%= "#{task.serial}: #{task.description}" %></p>');
+if($('#category-<%= category.id %>').length === 1){
+    $('#category-<%= category.id %> .category-tasks')[0].insertAdjacentHTML('beforeend', '<%= escape_javascript(render partial: 'tasks/inline', locals: {record: task}) %>');
+}else{
+    document.getElementById('list-tasks').insertAdjacentHTML('beforeend', '<%= escape_javascript(render partial: 'categories/category_box', locals: {category: category ,tasks: [task]}) %>');
+}

@@ -72,7 +72,7 @@ class TasksController < ApplicationController
         @task_category = '@uncategorized' unless @task_category.present?
         @task_description = result[:task_description]
         @task_serial = 1
-        @last_serial = Task.last.try(:serial)
+        @last_serial = current_user.tasks.order(created_at: :desc).first.try(:serial)
         @task_serial = @last_serial + 1 if @last_serial.present?
         ActiveRecord::Base.transaction do
           @category = Category.find_by(name: @task_category)
@@ -87,7 +87,7 @@ class TasksController < ApplicationController
               raise ActiveRecord::Rollback
             end
           end
-          @new_task = Task.new(serial: @task_serial,
+          @new_task = current_user.tasks.new(serial: @task_serial,
                               description: @task_description,
                               category: @category,
                               user_id: 1,
@@ -102,7 +102,7 @@ class TasksController < ApplicationController
         end
       elsif result[:action] == 'begin_task'
         task_serial = result[:task]
-        @task = Task.find_by(serial: task_serial)
+        @task = current_user.tasks.find_by(serial: task_serial)
         @task_tracking_times = @task.tracking_times.pluck(:id)
         current_starting = @task.tracking_times.find_by(status: :starting)
         if current_starting.nil?
@@ -133,7 +133,7 @@ class TasksController < ApplicationController
         end
       elsif result[:action] == 'stop_task'
         task_serial = result[:task]
-        @task = Task.find_by(serial: task_serial)
+        @task = current_user.tasks.find_by(serial: task_serial)
         current_starting = @task.tracking_times.find_by(status: :starting)
         ActiveRecord::Base.transaction do
           if current_starting.present?
@@ -153,10 +153,14 @@ class TasksController < ApplicationController
         end
       elsif result[:action] == 'check_task'
         task_serial = result[:task]
-        @task = Task.find_by(serial: task_serial)
+        @task = current_user.tasks.find_by(serial: task_serial)
         if @task.status == 'done'
-          @error = true
-          @message = 'task done before'
+          if @task.update(end_at: nil, status: :starting)
+            @message = "task #{task_serial} unchecked"
+          else
+            @error = true
+            @message = @task.errors.full_messages.to_sentence.inspect
+          end
         else
           current_starting = @task.tracking_times.find_by(status: :starting)
           ActiveRecord::Base.transaction do
@@ -168,7 +172,7 @@ class TasksController < ApplicationController
                   @message = "task #{task_serial} checked"
                 else
                   @error = true
-                  @message = @task.errors.full_message.to_sentence.inspect
+                  @message = @task.errors.full_messages.to_sentence.inspect
                   raise ActiveRecord::Rollback
                 end
               else
@@ -190,7 +194,7 @@ class TasksController < ApplicationController
         end
       elsif result[:action] == 'edit_task'
         task_serial = result[:task]
-        @task = Task.find_by(serial: task_serial)
+        @task = current_user.tasks.find_by(serial: task_serial)
         ActiveRecord::Base.transaction do
           if @task.present?
             if @task.update(description: result[:task_description])
@@ -208,7 +212,7 @@ class TasksController < ApplicationController
         end
       elsif result[:action] == 'delete_task'
         task_serial = result[:task]
-        @task = Task.find_by(serial: task_serial)
+        @task = current_user.tasks.find_by(serial: task_serial)
         ActiveRecord::Base.transaction do
           if @task.present?
             if @task.destroy
@@ -223,6 +227,26 @@ class TasksController < ApplicationController
             raise ActiveRecord::Rollback
           end
         end
+      elsif result[:action] == 'archive_task'
+        task_serial = result[:task]
+        @task = current_user.tasks.find_by(serial: task_serial)
+        if @task.present?
+          if @task.update(archived: true)
+          else
+            @error = true
+            @message = @task.errors.full_messages.to_sentence
+          end
+        end
+      elsif result[:action] == 'restore_task'
+        task_serial = result[:task]
+        @task = current_user.tasks.find_by(serial: task_serial)
+        if @task.present?
+          if @task.update(archived: false)
+          else
+            @error = true
+            @message = @task.errors.full_messages.to_sentence
+          end
+        end
       end
     else
       @error = true
@@ -234,19 +258,24 @@ class TasksController < ApplicationController
     else
       if result[:action] == 'create_task'
         respond_to do |format|
-          format.js {render 'tasks/new', locals: {task: @new_task, category: @new_task.category}}
+          format.js {
+            render 'tasks/new', locals: {
+                task_action: result[:action],
+                task: @new_task,
+                category: @new_task.category
+            }
+          }
         end
-      elsif result[:action] == 'begin_task'
+      elsif %w[begin_task stop_task check_task edit_task delete_task archive_task restore_task].include?(result[:action])
         respond_to do |format|
-          format.js {render 'tasks/update', locals: {task: @task, start_at: @start_at, message: @message}}
-        end
-      elsif result[:action] == 'stop_task'
-        respond_to do |format|
-          format.js {render 'tasks/update', locals: {task: @task, end_at: @end_at, message: @message}}
-        end
-      elsif result[:action] == 'check_task'
-        respond_to do |format|
-          format.js {render 'tasks/update', locals: {task: @task, end_at: @end_at, message: @message}}
+          format.js {
+            render 'tasks/update', locals: {
+                task_action: result[:action],
+                task: @task,
+                start_at: @start_at,
+                message: @message
+            }
+          }
         end
       end
     end

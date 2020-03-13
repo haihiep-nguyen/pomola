@@ -37,3 +37,15 @@ body {
 }
 #top-right-header {
 }
+.task {
+  &[data-action="begin_task"]{
+    color: orange;
+  }
+  &[data-action="stop_task"]{
+    color: red;
+  }
+  &[data-action="check_task"]{
+    text-decoration: line-through;
+    color: #cbd5e0;
+  }
+}

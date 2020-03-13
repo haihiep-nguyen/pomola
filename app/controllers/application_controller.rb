@@ -35,6 +35,10 @@ class ApplicationController < ActionController::Base
       return {action: 'delete_task', task: command_as_array.drop(1)}
     elsif command_action == 'today'
       return {action: 'today_task'}
+    elsif command_action == 'archive'
+      return {action: 'archive_task', task: command_as_array.drop(1)}
+    elsif command_action == 'restore'
+      return {action: 'restore_task', task: command_as_array.drop(1)}
     else
       return {action: 'create_task', category: nil, task_description: command_as_array.join(' ')}
     end
