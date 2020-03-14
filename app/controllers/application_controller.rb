@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
     first_word = command_as_array.try(:first)
     if size_command > 1 && first_word.present?
       command_result(first_word.try(:downcase), command_as_array)
+    elsif command == 'today'
+      {action: 'today'}
     else
       false
     end
@@ -27,14 +29,18 @@ class ApplicationController < ActionController::Base
       return {action: 'stop_task', task: command_as_array.drop(1)}
     elsif command_action == 'c' || command_action == 'check'
       return {action: 'check_task', task: command_as_array.drop(1)}
+    elsif command_action == 'move'
+      return {
+          action: 'move_task',
+          task: command_as_array[1],
+          category: command_as_array[2]
+      }
     elsif command_action == 'e' || command_action == 'edit'
       return {action: 'edit_task',
               task: command_as_array[1],
               task_description: command_as_array[2..-1].join(' ')}
     elsif command_action == 'd' || command_action == 'delete'
       return {action: 'delete_task', task: command_as_array.drop(1)}
-    elsif command_action == 'today'
-      return {action: 'today_task'}
     elsif command_action == 'archive'
       return {action: 'archive_task', task: command_as_array.drop(1)}
     elsif command_action == 'restore'

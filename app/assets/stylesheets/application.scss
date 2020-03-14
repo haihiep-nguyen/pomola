@@ -32,8 +32,12 @@
 .h-screen {
   height: 100vh;
 }
+@font-face {
+  src: url('Meslo.ttf');
+  font-family: Meslo;
+}
 body {
-  font-family: 'Montserrat';
+  font-family: Meslo, Monaco;
 }
 #top-right-header {
 }
@@ -52,4 +56,63 @@ body {
 .category-box {
   padding: 15px;
   border-bottom: 1px solid #eee;
+}
+.border-r-2 {
+  border-right: 2px solid;
+}
+.text-stall-dim {
+  color: #a0aec0;
+}
+.border-stall-dim {
+  border-color: #a0aec0;
+}
+.border-orange {
+  border-color: orange;
+}
+.border-green {
+  border-color: green;
+}
+.list-in-3 {
+  .column-list {
+    width: calc(100% /3);
+  }
+}
+.list-in-2 {
+  .column-list {
+    width: 50%;
+  }
+}
+.column-list {
+  padding: 15px;
+  border-right: 1px solid #a0aec0;
+}
+#pomo-page {
+  overflow: hidden;
+  .column-list {
+    height: calc(100vh - 85px);
+    overflow-y: scroll;
+  }
+}
+.command-box {
+  height: 40px;
+}
+.header {
+  height: 45px;
+}
+.text-large {
+  font-size: 18px;
+}
+.text-small {
+  font-size: 12px;
+}
+.height-100{
+  height: 100%;
+}
+.account-box {
+  li {
+    list-style: none;
+    a {
+      color: #a0aec0;
+    }
+  }
 }

@@ -1,5 +1,6 @@
 module ApplicationHelper
   def get_hms(total_seconds)
+    total_seconds = 0 unless total_seconds.present?
     hours = (total_seconds / (60 * 60)).round
     minutes = ((total_seconds / 60) % 60).round
     seconds = (total_seconds % 60).round
@@ -16,5 +17,10 @@ module ApplicationHelper
         minutes: minutes.to_s.rjust(2,'0'),
         seconds: seconds.to_s.rjust(2,'0')
     }
+  end
+
+  def hms(total_seconds)
+    hms = get_hms(total_seconds)
+    "#{hms[:hours]}:#{hms[:minutes]}:#{hms[:seconds]}"
   end
 end

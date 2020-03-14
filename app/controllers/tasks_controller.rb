@@ -104,22 +104,20 @@ class TasksController < ApplicationController
         task_serial = result[:task]
         @task = current_user.tasks.find_by(serial: task_serial)
         @task_tracking_times = @task.tracking_times.pluck(:id)
-        current_starting = @task.tracking_times.find_by(status: :starting)
-        if current_starting.nil?
+        @current_starting = @task.tracking_times.find_by(status: :starting)
+        if @current_starting.nil?
           ActiveRecord::Base.transaction do
-            if @task_tracking_times.size == 0
-              @task.start_at = Time.zone.now
-            end
+            @task.start_at = Time.zone.now if @task_tracking_times.size == 0
             @task.status = :in_progress
             if @task.save
               @start_at = Time.zone.now
-              task_new_tracking = @task.tracking_times.new(start_at: Time.zone.now)
-              if task_new_tracking.save
+              @current_starting = @task.tracking_times.new(start_at: Time.zone.now)
+              if @current_starting.save
                 @start_at = Time.zone.now
                 @message = 'continue'
               else
                 @error = true
-                @message = task_new_tracking.errors.full_messages.to_sentence.inspect
+                @message = @current_starting.errors.full_messages.to_sentence.inspect
               end
             else
               @error = true
@@ -134,15 +132,21 @@ class TasksController < ApplicationController
       elsif result[:action] == 'stop_task'
         task_serial = result[:task]
         @task = current_user.tasks.find_by(serial: task_serial)
-        current_starting = @task.tracking_times.find_by(status: :starting)
+        @current_starting = @task.tracking_times.find_by(status: :starting)
         ActiveRecord::Base.transaction do
-          if current_starting.present?
-            if current_starting.update(status: :finished, end_at: Time.zone.now)
-              @end_at = current_starting.end_at
+          if @current_starting.present?
+            if @current_starting.update(status: :finished, end_at: Time.zone.now)
+              @end_at = @current_starting.end_at
               @message = "stop tracking on #{task_serial}"
+              if @task.update(status: :waiting)
+              else
+                @error = true
+                @message = @task.errors.full_messages.to_sentence
+                raise ActiveRecord::Rollback
+              end
             else
               @error = true
-              @message = current_starting.errors.full_messages.to_sentence
+              @message = @current_starting.errors.full_messages.to_sentence
               raise ActiveRecord::Rollback
             end
           else
@@ -155,18 +159,18 @@ class TasksController < ApplicationController
         task_serial = result[:task]
         @task = current_user.tasks.find_by(serial: task_serial)
         if @task.status == 'done'
-          if @task.update(end_at: nil, status: :starting)
+          if @task.update(end_at: nil, status: :in_progress)
             @message = "task #{task_serial} unchecked"
           else
             @error = true
             @message = @task.errors.full_messages.to_sentence.inspect
           end
         else
-          current_starting = @task.tracking_times.find_by(status: :starting)
+          @current_starting = @task.tracking_times.find_by(status: :starting)
           ActiveRecord::Base.transaction do
-            if current_starting.present?
-              if current_starting.update(status: :finished, end_at: Time.zone.now)
-                @end_at = current_starting.end_at
+            if @current_starting.present?
+              if @current_starting.update(status: :finished, end_at: Time.zone.now)
+                @end_at = @current_starting.end_at
                 if @task.update(end_at: Time.zone.now, status: :done)
                   @end_at = @task.end_at
                   @message = "task #{task_serial} checked"
@@ -177,10 +181,17 @@ class TasksController < ApplicationController
                 end
               else
                 @error = true
-                @message = current_starting.errors.full_messages.to_sentence
+                @message = @current_starting.errors.full_messages.to_sentence
                 raise ActiveRecord::Rollback
               end
             else
+              @current_starting = @task.tracking_times.new(start_at: Time.zone.now, end_at: Time.zone.now)
+              if @current_starting.save
+              else
+                @error = true
+                @message = @current_starting.errors.full_messages.to_sentence
+                raise ActiveRecord::Rollback
+              end
               if @task.update(end_at: Time.zone.now, status: :done)
                 @end_at = @task.end_at
                 @message = "task #{task_serial} checked"
@@ -192,6 +203,27 @@ class TasksController < ApplicationController
             end
           end
         end
+      elsif result[:action] == 'move_task'
+        task_serial = result[:task]
+        new_category_name = result[:category]
+        @task = current_user.tasks.find_by(serial: task_serial)
+        @task_new_category = current_user.categories.find_or_create_by(name: new_category_name)
+        if @task_new_category.present? && @task_new_category.name != @task.category.name
+          if @task.update(category: @task_new_category)
+
+          else
+            @error = true
+            @message = @task.errors.full_messages.to_sentence
+          end
+        else
+          @error = true
+          if @task_new_category.present?
+            @message = 'current category'
+          else
+            @message = "can't find category"
+          end
+        end
+
       elsif result[:action] == 'edit_task'
         task_serial = result[:task]
         @task = current_user.tasks.find_by(serial: task_serial)
@@ -266,14 +298,29 @@ class TasksController < ApplicationController
             }
           }
         end
-      elsif %w[begin_task stop_task check_task edit_task delete_task archive_task restore_task].include?(result[:action])
+      elsif result[:action] == 'today'
+        respond_to do |format|
+          format.js {
+            render 'tasks/today'
+          }
+        end
+      elsif %w[begin_task stop_task check_task edit_task move_task delete_task archive_task restore_task].include?(result[:action])
         respond_to do |format|
           format.js {
             render 'tasks/update', locals: {
                 task_action: result[:action],
                 task: @task,
                 start_at: @start_at,
-                message: @message
+                message: @message,
+                track_time_record: (if defined?(@current_starting)
+                                      @current_starting
+                                    end),
+                new_category: (if defined?(@task_new_category)
+                                 @task_new_category
+                               end),
+                time_spent_today: (if %w[begin_task stop_task check_task].include?(result[:action])
+                                     current_user.time_spent_today
+                                   end)
             }
           }
         end

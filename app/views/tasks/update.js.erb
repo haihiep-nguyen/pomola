@@ -4,38 +4,91 @@ let thisTask = $('#task-<%= task.serial %>');
 if(thisAction === 'delete_task'){
     $('#task-<%= task.serial %>').remove();
     clearInterval(eval(intervalTask));
-    console.log("delete task");
 }else{
     if(thisAction === 'begin_task'){
         runStartingTask(thisTask.find('.task-time-counter'));
-        console.log('begin task');
     }else if(thisAction === 'stop_task' || thisAction === 'check_task'){
         clearInterval(eval(intervalTask));
-        console.log('stop task');
     }else if(thisAction === 'edit_task'){
-        console.log("CHANGE this task");
         thisTask.find(".task-content").html('<%= task.description %>')
     }else if(thisAction === 'archive_task'){
-        let archivedTasks = $("#archived-tasks .task");
-        if(archivedTasks.length === 0){
-            thisTask.appendTo("#archived-tasks");
-        }else{
+        if($("#archived-tasks #category-<%= task.category_id %>").length === 0){
             let loopBreak = false;
-            archivedTasks.each(function () {
-                if(parseInt($(this).attr('data-task-serial')) > parseInt(thisTask.attr('data-task-serial'))){
-                    thisTask.insertBefore($(this));
-                    loopBreak = true
+            let cateElem = "<%= escape_javascript(render partial: 'categories/category_box', locals: {category: task.category ,tasks: [task]}) %>";
+            thisTask.remove();
+            $("#archived-tasks .category-box").each(function () {
+                if(parseInt($(this).attr('data-category-id')) > <%= task.category_id %>){
+                    $(cateElem).insertBefore($(this));
+                    loopBreak = true;
                     return false;
                 }
             });
             if(loopBreak === false){
-                thisTask.appendTo("#archived-tasks");
+                $(cateElem).appendTo("#archived-tasks");
+            }
+        }else{
+            let categoryTasks = $("#archived-tasks #category-<%= task.category_id %> .task");
+            if(categoryTasks.length === 0){
+                thisTask.appendTo("#archived-tasks #category-<%= task.category_id %> .category-tasks");
+            }else{
+                let loopBreak = false;
+                categoryTasks.each(function () {
+                    if(parseInt($(this).attr('data-task-serial')) > parseInt(thisTask.attr('data-task-serial'))){
+                        thisTask.insertBefore($(this));
+                        loopBreak = true
+                        return false;
+                    }
+                });
+                if(loopBreak === false){
+                    thisTask.appendTo("#archived-tasks #category-<%= task.category_id %> .category-tasks");
+                }
             }
         }
+        if($("#list-tasks #category-<%= task.category_id %> .task").length == 0){
+            $("#list-tasks #category-<%= task.category_id %>").remove();
+        }
+    }else if(thisAction === 'move_task'){
+        let parentList = thisTask.closest('.column-list');
+        let currentCateList = thisTask.closest('.category-box');
+        let newCateList = parentList.find("#category-<%= task.category_id %>")
+        if(newCateList.length === 0){
+            let loopBreak = false;
+            let cateElem = "<%= escape_javascript(render partial: 'categories/category_box', locals: {category: task.category ,tasks: [task]}) %>";
+            thisTask.remove();
+            currentCateList.each(function () {
+                if(parseInt($(this).attr('data-category-id')) > <%= task.category_id %>){
+                    $(cateElem).insertBefore($(this));
+                    loopBreak = true;
+                    return false;
+                }
+            });
+            if(loopBreak === false){
+                $(cateElem).appendTo(parentList);
+            }
+        }else{
+            let categoryTasks = newCateList.find(".task");
+            let categoryTaskList = categoryTasks.find('.category-tasks')
+            if(categoryTasks.length === 0){
+                thisTask.appendTo(categoryTaskList);
+            }else{
+                let loopBreak = false;
+                categoryTasks.each(function () {
+                    if(parseInt($(this).attr('data-task-serial')) > parseInt(thisTask.attr('data-task-serial'))){
+                        thisTask.insertBefore($(this));
+                        loopBreak = true
+                        return false;
+                    }
+                });
+                if(loopBreak === false){
+                    thisTask.appendTo(categoryTaskList);
+                }
+            }
+        }
+        if(currentCateList.find(".task").length == 0){
+            currentCateList.remove();
+        }
     }else if(thisAction === 'restore_task'){
-        console.log('resotre');
-        console.log(thisTask);
-        if($("#category-<%= task.category_id %>").length === 0){
+        if($("#list-tasks #category-<%= task.category_id %>").length === 0){
             let loopBreak = false;
             let cateElem = "<%= escape_javascript(render partial: 'categories/category_box', locals: {category: task.category ,tasks: [task]}) %>";
             thisTask.remove();
@@ -50,9 +103,9 @@ if(thisAction === 'delete_task'){
                 $(cateElem).appendTo("#list-tasks");
             }
         }else{
-            let categoryTasks = $("#category-<%= task.category_id %> .task");
+            let categoryTasks = $("#list-tasks #category-<%= task.category_id %> .task");
             if(categoryTasks.length === 0){
-                thisTask.appendTo("#category-<%= task.category_id %> .category-tasks");
+                thisTask.appendTo("#list-tasks #category-<%= task.category_id %> .category-tasks");
             }else{
                 let loopBreak = false;
                 categoryTasks.each(function () {
@@ -63,13 +116,24 @@ if(thisAction === 'delete_task'){
                     }
                 });
                 if(loopBreak === false){
-                    thisTask.appendTo("#category-<%= task.category_id %> .category-tasks");
+                    thisTask.appendTo("#list-tasks #category-<%= task.category_id %> .category-tasks");
                 }
             }
-            console.log(categoryTasks);
+        }
+        if($("#archived-tasks #category-<%= task.category_id %> .task").length == 0){
+            $("#archived-tasks #category-<%= task.category_id %>").remove();
         }
     }
-    if(thisAction === 'begin_task' || thisAction === 'stop_task' || thisAction === 'check_task'){
-        $('#task-<%= task.serial %>').attr('data-action', thisAction);
-    }
+    <% if %w(begin_task stop_task check_task).include?(task_action) %>
+      $('#task-<%= task.serial %>').attr('data-action', thisAction);
+      <% if defined?(track_time_record) && track_time_record.present? %>
+        let trackHtml = "<%= escape_javascript(render partial: 'tracking_times/inline', locals: {record: track_time_record}) %>";
+        if($("#track-time-<%= track_time_record.id %>").length === 0){
+            $(trackHtml).appendTo("#today-tasks .list-tracking");
+        }else{
+            $("#track-time-<%= track_time_record.id %>").replaceWith(trackHtml);
+        }
+        $("#time-spent-today").html('<%= hms(time_spent_today) %>');
+      <% end %>
+    <% end %>
 }

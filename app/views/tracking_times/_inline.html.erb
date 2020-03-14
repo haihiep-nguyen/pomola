@@ -1,0 +1,38 @@
+<%
+  task_checked = false
+  if record.end_at.present?
+    if record.task.last_tracking_id == record.id
+      class_border = 'border-green'
+      task_checked = true if record.task.status == 'done'
+    else
+      class_border = 'border-stall-dim'
+    end
+  else
+    class_border = 'border-orange'
+  end
+%>
+<div class="mb-2 d-flex flex-row" id="track-time-<%= record.id %>" data-task-id="<%= record.task.id %>">
+  <div class="text-right text-sm pr-3 mr-3 border-r-2 <%= class_border %>">
+    <span class="block text-stall-dim"><%= record.start_at&.strftime("%I:%M:%S %p") %></span>
+    <br>
+    <span class="block"><%= record.end_at&.strftime("%I:%M:%S %p") %></span>
+  </div>
+  <div class="flex-1">
+    <div>
+      <% if record.task.status == 'in_progress' %>
+        <span class="text-warning text-large">*</span>
+      <% end %>
+      <%= record.task.description.html_safe %>
+    </div>
+    <div class="text-small text-stall-dim">
+      <span class="total-time">
+        <% if task_checked %>
+          <span class="text-success">✔</span>
+        <% end %>
+        <% if record.start_at.present? && record.end_at.present? %>
+          <%= hms(record.end_at - record.start_at) %>
+        <% end %>
+      </span>
+    </div>
+  </div>
+</div>

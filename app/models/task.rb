@@ -9,6 +9,7 @@ class Task < ApplicationRecord
 
   attr_accessor :time_counting
   validates_uniqueness_of :serial, scope: :user
+  scope :today, ->() {where('date(tasks.updated_at) = CURRENT_DATE')}
 
   def time_counting
     total_time = 0
@@ -29,5 +30,9 @@ class Task < ApplicationRecord
       end
     end
     return {total_time: total_time, has_running: has_running}
+  end
+
+  def last_tracking_id
+    tracking_times.order(id: :desc).limit(1).pluck(:id)&.first
   end
 end

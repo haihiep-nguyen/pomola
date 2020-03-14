@@ -17,7 +17,7 @@
     <%= record.serial %>
   </div>
   <div class="task-content col-8">
-    <%= record.description %>
+    <%= record.description.html_safe %>
   </div>
   <% hms = get_hms(record.time_counting[:total_time]) %>
   <div class="task-time-counter col-3 <%= 'running' if record.time_counting[:has_running] %>"
