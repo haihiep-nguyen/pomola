@@ -1,7 +1,6 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Users</h1>
-
 <table>
   <thead>
     <tr>
@@ -21,8 +20,7 @@
   </thead>
 
   <tbody>
-  <% raise current_user.sign_out.inspect %>
-    <% @users.each do |user| %>
+    <% @users&.each do |user| %>
       <tr>
 <!--        <td><%#= user.username %></td>-->
         <td><%= user.name %></td>

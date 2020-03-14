@@ -15,8 +15,8 @@
   <body>
     <% unless current_user.present? %>
       <div class="container-fluid">
-        <div class="notice"><%= notice %></div>
-        <div class="alert p-0 m-0"><%= alert %></div>
+        <div class="notice alert-success <%= notice.present? ? 'p-2' : 'p-0 border-0' %>" role="alert"><%= notice %></div>
+        <div class="alert alert-danger <%= alert.present? ? 'p-2' : 'p-0 border-0' %> m-0" role="alert"><%= alert %></div>
       </div>
       <%= render partial: 'devise/menu/login_items' %>
     <% end %>

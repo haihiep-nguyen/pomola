@@ -5,6 +5,7 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
+    redirect_to root_path
     @users = User.all
   end
 
@@ -60,6 +61,11 @@ class UsersController < ApplicationController
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def sign_out
+    sign_out current_user
+    redirect_to root_path
   end
 
   private

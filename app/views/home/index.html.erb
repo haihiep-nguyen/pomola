@@ -1,8 +1,8 @@
 <div class="w-screen h-screen d-flex flex-column">
-  <div class="container-fluid header bg-light">
+  <div class="container-fluid header">
     <div class="row height-100">
       <div class="col-6 d-flex align-items-center">
-        <h3 class="text-success mb-0">PomoLa</h3>
+        <h3 class="logo-text mb-0">PomoLa</h3>
       </div>
       <div class="col-6 d-flex align-items-center justify-content-end">
         <%= render partial: 'devise/menu/login_items' %>
@@ -11,12 +11,12 @@
   </div>
   <div class="container-fluid flex-grow-1 flex-shrink-1 list-in-3" id="pomo-page">
     <div class="row">
-      <div class="column-list" id="list-tasks">
+      <div class="column-list bg-white" id="list-tasks">
         <% @tasks.each do |category, tasks| %>
           <%= render partial: 'categories/category_box', locals: {category: category, tasks: tasks} %>
         <% end %>
       </div>
-      <div class="column-list" id="today-tasks">
+      <div class="column-list bg-light" id="today-tasks">
         <h4>Today Activities</h4>
         <span class="time"><%= Time.zone.now.strftime("%d/%m/%Y") %></span>
         <div class="list-tracking">
@@ -31,7 +31,7 @@
           </span>
         </span>
       </div>
-      <div class="column-list" id="archived-tasks">
+      <div class="column-list bg-light" id="archived-tasks">
         <h4>Archived Tasks</h4>
         <% @archived_tasks.each do |category, tasks| %>
           <%= render partial: 'categories/category_box', locals: {category: category, tasks: tasks} %>
@@ -39,14 +39,13 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid command-box bg-light">
-    <div class="row">
-      <div class="col-12">
-        <%= simple_form_for :task, url: command_tasks_path, method: 'POST', html: {id: "command-form"}, remote: true do |f| %>
-          <%= f.input_field :command, id: "command-input" %>
-        <% end %>
-      </div>
-    </div>
+  <div class="command-box bg-light d-none box-shadow-5">
+    <%= simple_form_for :task, url: command_tasks_path, method: 'POST', html: {id: "command-form", autocomplete: 'off'}, remote: true do |f| %>
+      <%= f.input_field :command,
+                        id: "command-input",
+                        placeholder: 'Type command here...',
+                        autocomplete: 'off' %>
+    <% end %>
   </div>
 
 </div>

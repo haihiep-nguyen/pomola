@@ -1,6 +1,3 @@
-@import "bootstrap";
-@import url('https://fonts.googleapis.com/css?family=Merriweather:400,700');
-
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
@@ -14,105 +11,7 @@
  * It is generally better to create a new file per style scope.
  *
  *= require mousetrap
+ *= require_tree ./main
  *= require_tree .
  *= require_self
  */
-.height-95 {
-  height: 95vh;
-  max-height: calc(100vh - 100px);
-  overflow: scroll;
-}
-.height-9 {
-  height: 5vh;
-  min-height: 100px;
-}
-.w-screen {
-  width: 100vw;
-}
-.h-screen {
-  height: 100vh;
-}
-@font-face {
-  src: url('Meslo.ttf');
-  font-family: Meslo;
-}
-body {
-  font-family: Meslo, Monaco;
-}
-#top-right-header {
-}
-.task {
-  &[data-action="begin_task"]{
-    color: orange;
-  }
-  &[data-action="stop_task"]{
-    color: red;
-  }
-  &[data-action="check_task"]{
-    text-decoration: line-through;
-    color: #cbd5e0;
-  }
-}
-.category-box {
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-}
-.border-r-2 {
-  border-right: 2px solid;
-}
-.text-stall-dim {
-  color: #a0aec0;
-}
-.border-stall-dim {
-  border-color: #a0aec0;
-}
-.border-orange {
-  border-color: orange;
-}
-.border-green {
-  border-color: green;
-}
-.list-in-3 {
-  .column-list {
-    width: calc(100% /3);
-  }
-}
-.list-in-2 {
-  .column-list {
-    width: 50%;
-  }
-}
-.column-list {
-  padding: 15px;
-  border-right: 1px solid #a0aec0;
-}
-#pomo-page {
-  overflow: hidden;
-  .column-list {
-    height: calc(100vh - 85px);
-    overflow-y: scroll;
-  }
-}
-.command-box {
-  height: 40px;
-}
-.header {
-  height: 45px;
-}
-.text-large {
-  font-size: 18px;
-}
-.text-small {
-  font-size: 12px;
-}
-.height-100{
-  height: 100%;
-}
-.account-box {
-  li {
-    list-style: none;
-    a {
-      color: #a0aec0;
-    }
-  }
-}
