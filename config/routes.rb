@@ -14,5 +14,5 @@ Rails.application.routes.draw do
   end
   resources :categories
   resources :brands
-  resources :users
+  # resources :users
 end
