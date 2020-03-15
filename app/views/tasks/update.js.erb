@@ -3,6 +3,8 @@ let intervalTask = 'window.taskInterval.t' + <%= task.serial %>;
 let thisTask = $('#task-<%= task.serial %>');
 if(thisAction === 'delete_task'){
     $('#task-<%= task.serial %>').remove();
+    $('.track-time-item[data-task-id="<%= task.serial %>"]').remove();
+    console.log("DELETE track of <%= task.serial %>")
     clearInterval(eval(intervalTask));
 }else{
     if(thisAction === 'begin_task'){
@@ -133,7 +135,9 @@ if(thisAction === 'delete_task'){
         }else{
             $("#track-time-<%= track_time_record.id %>").replaceWith(trackHtml);
         }
-        $("#time-spent-today").html('<%= hms(time_spent_today) %>');
       <% end %>
     <% end %>
 }
+<% if defined?(time_spent_today) && time_spent_today.present? %>
+$("#time-spent-today").html('<%= hms(time_spent_today) %>');
+<% end %>

@@ -11,7 +11,7 @@
     class_border = 'border-orange'
   end
 %>
-<div class="mb-2 d-flex flex-row" id="track-time-<%= record.id %>" data-task-id="<%= record.task.id %>">
+<div class="mb-2 d-flex flex-row track-time-item" id="track-time-<%= record.id %>" data-task-id="<%= record.task.serial %>">
   <div class="text-right text-sm pr-3 mr-3 border-r-2 <%= class_border %>">
     <span class="block text-stall-dim"><%= record.start_at&.strftime("%I:%M:%S %p") %></span>
     <br>

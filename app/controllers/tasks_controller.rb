@@ -318,7 +318,7 @@ class TasksController < ApplicationController
                 new_category: (if defined?(@task_new_category)
                                  @task_new_category
                                end),
-                time_spent_today: (if %w[begin_task stop_task check_task].include?(result[:action])
+                time_spent_today: (if %w[begin_task stop_task check_task delete_task].include?(result[:action])
                                      current_user.time_spent_today
                                    end)
             }

@@ -2,12 +2,18 @@
   data_action = ''
   if record.status == 'done'
     data_action = 'check_task'
-  elsif record.status == 'in_progress'
+  else
     track_times = record.tracking_times.pluck(:id)
     track_starting = record.tracking_times.where(status: :starting).pluck(:id)
-    data_action = 'begin_task' if track_starting.present?
-    data_action = 'stop_task' if track_times.present? && track_starting.blank?
+    if track_starting.present?
+      data_action = 'begin_task'
+    elsif track_times.present?
+      data_action = 'stop_task'
+    end
   end
+  puts "stop at #{record.serial}"
+  puts record.inspect
+  puts data_action.inspect
 %>
 <div class="row each-task task"
      id="task-<%= record.serial %>"
