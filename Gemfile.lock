@@ -180,7 +180,7 @@ GEM
     pg (0.21.0)
     popper_js (1.16.0)
     public_suffix (4.0.3)
-    puma (3.12.2)
+    puma (3.12.4)
     pundit (2.1.0)
       activesupport (>= 3.0.0)
     raabro (1.1.6)
@@ -300,7 +300,6 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.2)
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -356,7 +355,7 @@ DEPENDENCIES
   paper_trail
   paper_trail-association_tracking
   pg (~> 0.20)
-  puma (~> 3.11)
+  puma (~> 3.12)
   pundit
   rails (~> 6.0.0)
   rails-ujs (~> 0.1.0)
@@ -371,7 +370,6 @@ DEPENDENCIES
   sinatra
   spring
   spring-watcher-listen (~> 2.0.0)
-  sqlite3 (~> 1.4)
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)
