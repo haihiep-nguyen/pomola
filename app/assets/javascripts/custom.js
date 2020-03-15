@@ -62,44 +62,42 @@ $(document).ready(function () {
 $(document).on('keydown', function(e){
     let commandBox = $(".command-box");
     let commandInput = $("#command-input");
-    if(e.keyCode === 73){
-        if(commandBox.hasClass('d-none') === true){
-            e.preventDefault();
-            commandBox.removeClass('d-none');
-        }
-        if(commandInput.is(':focus') === false){
-            e.preventDefault();
-            commandInput.focus();
-        }
-    }else if(e.keyCode === 27){
-        if(commandBox.hasClass('d-none') === false){
-            commandBox.addClass('d-none');
-        }
-    }else if((e.keyCode === 38 || e.keyCode === 40) && commandBox.hasClass('d-none') === false){
-        let history = JSON.parse(localStorage.getItem("commandHistory"));
-        let cursor = history.length - 1;
-        let newValue;
-        let newCursor;
-        if(window.currentCursor !== undefined && window.currentCursor !== ''){
-            cursor = window.currentCursor;
-        }
-        if(e.keyCode === 38){
-            newCursor = cursor - 1;
-            newValue = history[newCursor];
-        }else if(e.keyCode === 40){
-            newCursor = cursor + 1;
-            newValue = history[newCursor];
-        }
-        console.log(newCursor);
-        console.log(history);
-        console.log(cursor);
-        console.log(newValue);
-        if(newValue !== undefined && newValue !== ''){
-            commandInput.val(newValue);
-            setTimeout(function () {
-                commandInput.setCursorToTextEnd();
-            }, 1);
-            window.currentCursor = newCursor;
+    if(commandBox.length > 0){
+        if(e.keyCode === 73){
+            if(commandBox.hasClass('d-none') === true){
+                e.preventDefault();
+                commandBox.removeClass('d-none');
+            }
+            if(commandInput.is(':focus') === false){
+                e.preventDefault();
+                commandInput.focus();
+            }
+        }else if(e.keyCode === 27){
+            if(commandBox.hasClass('d-none') === false){
+                commandBox.addClass('d-none');
+            }
+        }else if((e.keyCode === 38 || e.keyCode === 40) && commandBox.hasClass('d-none') === false){
+            let history = JSON.parse(localStorage.getItem("commandHistory"));
+            let cursor = history.length - 1;
+            let newValue;
+            let newCursor;
+            if(window.currentCursor !== undefined && window.currentCursor !== ''){
+                cursor = window.currentCursor;
+            }
+            if(e.keyCode === 38){
+                newCursor = cursor - 1;
+                newValue = history[newCursor];
+            }else if(e.keyCode === 40){
+                newCursor = cursor + 1;
+                newValue = history[newCursor];
+            }
+            if(newValue !== undefined && newValue !== ''){
+                commandInput.val(newValue);
+                setTimeout(function () {
+                    commandInput.setCursorToTextEnd();
+                }, 1);
+                window.currentCursor = newCursor;
+            }
         }
     }
 });
@@ -108,21 +106,14 @@ $(document).on('submit', '#command-form', function () {
     let newHistory = [];
     let inputValue = $("#command-input").val();
     let localHistory = localStorage.getItem("commandHistory");
-    console.log(newHistory);
-    console.log(localHistory);
-    console.log(typeof localHistory);
     if(localHistory !== undefined && localHistory !== '' && localHistory !== null){
-        console.log(JSON.parse(localHistory));
-        console.log(typeof JSON.parse(localHistory));
         newHistory = JSON.parse(localHistory);
-        console.log(newHistory);
         newHistory.push(inputValue);
     }else{
         newHistory.push(inputValue)
     }
     window.currentCursor = newHistory.length;
     localStorage.setItem("commandHistory", JSON.stringify(newHistory));
-    console.log("SUBMIT");
     $('.command-box').addClass('d-none');
 });
 
