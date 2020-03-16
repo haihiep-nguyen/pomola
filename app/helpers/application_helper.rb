@@ -1,9 +1,11 @@
 module ApplicationHelper
   def get_hms(total_seconds)
     total_seconds = 0 unless total_seconds.present?
-    hours = (total_seconds / (60 * 60)).round
-    minutes = ((total_seconds / 60) % 60).round
     seconds = (total_seconds % 60).round
+    reduce_seconds = total_seconds - seconds
+    minutes = ((reduce_seconds / 60) % 60).round
+    reduce_minutes = reduce_seconds - minutes.minute.seconds
+    hours = (reduce_minutes / (60 * 60)).round
     if seconds == 60
       minutes += 1
       seconds = 0
