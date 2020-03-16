@@ -5,8 +5,8 @@ class ApplicationController < ActionController::Base
     first_word = command_as_array.try(:first)
     if size_command > 1 && first_word.present?
       command_result(first_word.try(:downcase), command_as_array)
-    elsif command == 'today'
-      {action: 'today'}
+    elsif %w(today list-archived).include?(command)
+      {action: command}
     else
       false
     end

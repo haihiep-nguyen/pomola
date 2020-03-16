@@ -62,11 +62,13 @@ $(document).ready(function () {
 $(document).on('keydown', function(e){
     let commandBox = $(".command-box");
     let commandInput = $("#command-input");
+    let helpBox = $("#pomo-help-box");
     if(commandBox.length > 0){
         if(e.keyCode === 73){
             if(commandBox.hasClass('d-none') === true){
                 e.preventDefault();
                 commandBox.removeClass('d-none');
+                helpBox.find('div').toggleClass('d-none');
             }
             if(commandInput.is(':focus') === false){
                 e.preventDefault();
@@ -75,6 +77,7 @@ $(document).on('keydown', function(e){
         }else if(e.keyCode === 27){
             if(commandBox.hasClass('d-none') === false){
                 commandBox.addClass('d-none');
+                helpBox.find('div').toggleClass('d-none');
             }
         }else if((e.keyCode === 38 || e.keyCode === 40) && commandBox.hasClass('d-none') === false){
             let history = JSON.parse(localStorage.getItem("commandHistory"));

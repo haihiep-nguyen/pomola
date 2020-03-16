@@ -298,10 +298,10 @@ class TasksController < ApplicationController
             }
           }
         end
-      elsif result[:action] == 'today'
+      elsif %w(today list-archived).include?(result[:action])
         respond_to do |format|
           format.js {
-            render 'tasks/today'
+            render 'tasks/command', locals: {command: result[:action]}
           }
         end
       elsif %w[begin_task stop_task check_task edit_task move_task delete_task archive_task restore_task].include?(result[:action])

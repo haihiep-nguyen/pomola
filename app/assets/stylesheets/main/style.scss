@@ -15,11 +15,12 @@
   height: 100vh;
 }
 @font-face {
-  src: url('app/assets/fonts/Meslo.ttf');
+  src: font-url('Meslo.ttf');
   font-family: Meslo;
 }
 body {
   font-family: Meslo, Monaco;
+  font-size: 14px;
   min-height: 100vh;
   background: -moz-linear-gradient(-45deg,  #EA5C54  0%, #bb6dec 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#EA5C54 ), color-stop(100%,#bb6dec)); /* Chrome,Safari4+ */
@@ -31,6 +32,7 @@ body {
 #top-right-header {
 }
 .task {
+  margin-bottom: 8px;
   &[data-action="begin_task"]{
     color: orange;
   }
@@ -39,6 +41,9 @@ body {
   }
   &[data-action="check_task"]{
     text-decoration: line-through;
+    color: #cbd5e0;
+  }
+  .task-serial {
     color: #cbd5e0;
   }
 }
@@ -60,6 +65,11 @@ body {
 }
 .border-green {
   border-color: green;
+}
+.list-in-1 {
+  .column-list {
+    width: 100%;
+  }
 }
 .list-in-3 {
   .column-list {
@@ -228,4 +238,12 @@ body {
   .btn-link-text {
     color: #fff;
   }
+}
+#pomo-help-box {
+  display: block;
+  width: 300px;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+
 }

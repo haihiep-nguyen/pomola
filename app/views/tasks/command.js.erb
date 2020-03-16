@@ -1,0 +1,12 @@
+let divToToggle;
+<% if command == 'list-archived' %>
+divToToggle = $('#archived-tasks');
+<% elsif command == 'today' %>
+divToToggle = $('#today-tasks');
+<% end %>
+divToToggle.toggleClass('d-none');
+let pomoPage = $('#pomo-page');
+let columnListCount = pomoPage.find('.column-list:not(.d-none)').length;
+pomoPage.removeClass('list-in-2');
+pomoPage.removeClass('list-in-3');
+pomoPage.addClass('list-in-' + columnListCount);
