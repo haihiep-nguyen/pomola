@@ -22,4 +22,6 @@ Rails.application.routes.draw do
   end
   get 'momo/ipn'
   post 'momo/ipn'
+  get 'momo/return_url'
+  post 'momo/return_url'
 end

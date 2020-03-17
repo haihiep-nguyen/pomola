@@ -7,6 +7,11 @@ class MomoController < ApplicationController
     raise params.inspect
   end
 
+  def return_url
+    puts 'return url here'
+    raise params.inspect
+  end
+
   def send_to_momo
     #parameters send to MoMo get get payUrl
     endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
@@ -14,7 +19,7 @@ class MomoController < ApplicationController
     accessKey = "klm05TvNBzhg7h7j"
     serectkey = "at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa"
     orderInfo = "Thanh toán qua MoMo"
-    returnUrl = momo_ipn_url
+    returnUrl = momo_return_url_url
     notifyurl = momo_ipn_url
     amount = "50000"
     orderId = "cart-123#{Time.zone.now.to_i}"
