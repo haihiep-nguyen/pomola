@@ -18,10 +18,13 @@ Rails.application.routes.draw do
   resources :momo do
     collection do
       get :send_to_momo
+      get :send_to_vnpay
     end
   end
   get 'momo/ipn'
   post 'momo/ipn'
   get 'momo/return_url'
   post 'momo/return_url'
+  get 'momo/handle_ipn' => "momo#handle_ipn"
+  post 'momo/handle_ipn' => "momo#handle_ipn"
 end
