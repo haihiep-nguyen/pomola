@@ -15,4 +15,11 @@ Rails.application.routes.draw do
   resources :categories
   resources :brands
   # resources :users
+  resources :momo do
+    collection do
+      get :send_to_momo
+    end
+  end
+  get 'momo/ipn'
+  post 'momo/ipn'
 end
